@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Michael Fassbender is Magneto",
+    "author": "Chris Sanders",
+    "url": "www.bing.com",
+    "likes": 6
+}
