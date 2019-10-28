@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const config = require('./utils/config')
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -22,5 +21,4 @@ app.use('/api/blogs', blogsRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
-// eslint-disable-next-line no-undef
 module.exports = app

@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const http = require('http')
 const config = require('./utils/config')
 const app = require('./app')
