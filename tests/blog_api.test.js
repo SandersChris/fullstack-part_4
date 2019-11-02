@@ -2,8 +2,14 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const api = supertest(app)
+
+const usersInDb = async () => {
+	const users = await User.find({})
+	return users.map(u => u.toJSON())
+}
 
 const initialBlogs = [
 	{
@@ -46,7 +52,7 @@ test('blogs are returned as json', async () => {
 	await api
 		.get('/api/blogs')
 		.expect(200)
-		.expect('Content-Type', 'application\/json; charset=utf-8')
+		.expect('Content-Type', 'application/json; charset=utf-8')
 })
 
 test('returns a property for blog id', async () => {
@@ -67,7 +73,7 @@ test('adds a blog post to the array list', async () => {
 		.post('/api/blogs')
 		.send(newBlog)
 		.expect(200)
-		.expect('Content-Type', 'application\/json; charset=utf-8')
+		.expect('Content-Type', 'application/json; charset=utf-8')
 
 	const response = await api.get('/api/blogs')
 	const author = response.body.map(r => r.author)
@@ -115,7 +121,6 @@ test('deletes a single blog', async () => {
 		.delete('/api/blogs/5db4c0261b585b2ca7be28a3')
 		.expect(204)
 
-
 	const response = await api.get('/api/blogs')
 
 	expect(response.body.length).toBe(initialBlogs.length - 1)
@@ -136,6 +141,51 @@ test('adds likes to a post', async () => {
 
 	expect(response.body[1].likes).toBe(100)
 
+})
+
+describe('when there is initially one user in db', () => {
+	beforeEach(async () => {
+		await User.deleteMany({})
+		const user = new User({ username: 'root', password: 'sekret' })
+		await user.save()
+	})
+
+	test('creation succeeds with a fresh username', async () => {
+		const usersAtStart = await usersInDb()
+
+		const newUser = {
+			username: 'chrib',
+			name: 'Chris Sanders',
+			password: 'beez'
+		}
+
+		await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(200)
+			.expect('Content-Type', 'application/json; charset=utf-8')
+
+		const usersAtEnd = await usersInDb()
+		expect(usersAtEnd.length).toBe(usersAtStart.length + 1)
+	})
+
+	test('does not add users with passwords smaller than 3 characters', async () => {
+		const usersAtStart = await usersInDb()
+
+		const newUser = {
+			username: 'chrib',
+			name: 'Chris Sanders',
+			password: 'be'
+		}
+
+		await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(400)
+
+		const usersAtEnd = await usersInDb()
+		expect(usersAtEnd.length).toBe(usersAtStart.length)
+	})
 })
 
 afterAll(() => {

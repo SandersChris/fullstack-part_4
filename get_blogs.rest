@@ -1,8 +1,10 @@
-DELETE http://localhost:3003/api/blogs/5db4b2c1cdf49b2afc24337a 
+delete http://localhost:3003/api/blogs/5dbcc1fd91256852aab15da1
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJveSIsImlkIjoiNWRiYjhkYzBhNDU1ZTU0ZDJiMDg0MTk1IiwiaWF0IjoxNTcyNjY2ODY2fQ.M6VqCjzaO-VJKNzKI0IifZIJHE-9Ka3hrEdBdYwZnsA
 
 {
-    "title": "James Mcavoy is It",
-    "author": "Stephen King",
+    "title": "The Lighthouse",
+    "author": "Robert Pattinson",
     "url": "www.bing.com",
-    "likes": 10
+    "likes": 13
 }
